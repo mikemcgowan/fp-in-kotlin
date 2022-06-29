@@ -109,4 +109,53 @@ internal class Chapter3Exercises {
         assertEquals(Nil, Nil.reverse())
         assertEquals(List.of(9), List.of(9).reverse())
     }
+
+    @Test
+    fun exercise3dot13() {
+        assertEquals(List.of(1, 2, 3, 4, 5), List.of(1, 2, 3).append(List.of(4, 5)))
+    }
+
+    @Test
+    fun exercise3dot14() {
+        assertEquals(
+            List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+            List.concat(
+                List.of(
+                    List.of(1, 2, 3),
+                    List.of(4, 5, 6),
+                    List.of(7, 8, 9),
+                )
+            )
+        )
+        assertEquals(
+            List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+            List.concatViaAppend(
+                List.of(
+                    List.of(1, 2, 3),
+                    List.of(4, 5, 6),
+                    List.of(7, 8, 9),
+                )
+            )
+        )
+        assertEquals(
+            List.of('M', 'i', 'k', 'e', ' ', 'M', 'c', 'G', 'o', 'w', 'a', 'n'),
+            List.concat(
+                List.of(
+                    List.of('M', 'i', 'k', 'e'),
+                    List.of(' '),
+                    List.of('M', 'c', 'G', 'o', 'w', 'a', 'n')
+                )
+            )
+        )
+        assertEquals(
+            List.of('M', 'i', 'k', 'e', ' ', 'M', 'c', 'G', 'o', 'w', 'a', 'n'),
+            List.concatViaAppend(
+                List.of(
+                    List.of('M', 'i', 'k', 'e'),
+                    List.of(' '),
+                    List.of('M', 'c', 'G', 'o', 'w', 'a', 'n')
+                )
+            )
+        )
+    }
 }

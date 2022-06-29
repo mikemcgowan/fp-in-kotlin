@@ -6,7 +6,14 @@ sealed class List<out A> {
             val tail = aa.sliceArray(1 until aa.size)
             return if (aa.isEmpty()) Nil else Cons(aa[0], of(*tail))
         }
+
         fun <A> empty(): List<A> = Nil
+
+        fun <A> concat(xs: List<List<A>>): List<A> =
+            xs.foldRight(empty()) { ys, acc -> ys.foldRight(acc) { a, acc2 -> Cons(a, acc2) } }
+
+        fun <A> concatViaAppend(xs: List<List<A>>): List<A> =
+            xs.foldLeft(empty()) { acc, ys -> acc.append(ys) }
     }
 }
 
@@ -69,3 +76,6 @@ fun <A> List<A>.lengthViaFoldLeft(): Int =
 
 fun <A> List<A>.reverse(): List<A> =
     foldLeft(List.empty()) { acc, a -> Cons(a, acc) }
+
+fun <A> List<A>.append(other: List<A>): List<A> =
+    foldRight(other) { a, acc -> Cons(a, acc) }
