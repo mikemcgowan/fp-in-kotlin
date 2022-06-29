@@ -168,4 +168,15 @@ internal class Chapter3Exercises {
     fun exercise3dot16() {
         assertEquals(List.of("0.0", "2.5", "5.0", "7.5"), List.of(0.0, 2.5, 5.0, 7.5).stringify())
     }
+
+    @Test
+    fun exercise3dot17() {
+        assertEquals(List.of(2, 3, 4, 5), List.of(1, 2, 3, 4).map { it + 1 })
+        assertEquals(List.of("0.0", "2.5", "5.0", "7.5"), List.of(0.0, 2.5, 5.0, 7.5).map { it.toString() })
+    }
+
+    @Test
+    fun exercise3dot18() {
+        assertEquals(List.of(2, 4, 6, 8, 10), List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter { it % 2 == 0 })
+    }
 }

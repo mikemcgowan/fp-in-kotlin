@@ -85,3 +85,9 @@ fun List<Int>.addOne(): List<Int> =
 
 fun List<Double>.stringify(): List<String> =
     foldRight(List.empty()) { a, acc -> Cons(a.toString(), acc) }
+
+fun <A, B> List<A>.map(f: (A) -> B): List<B> =
+    foldRight(List.empty()) { a, acc -> Cons(f(a), acc) }
+
+fun <A> List<A>.filter(f: (A) -> Boolean): List<A> =
+    foldRight(List.empty()) { a, acc -> if (f(a)) Cons(a, acc) else acc }
