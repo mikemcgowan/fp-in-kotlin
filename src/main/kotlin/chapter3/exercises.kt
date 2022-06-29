@@ -79,3 +79,9 @@ fun <A> List<A>.reverse(): List<A> =
 
 fun <A> List<A>.append(other: List<A>): List<A> =
     foldRight(other) { a, acc -> Cons(a, acc) }
+
+fun List<Int>.addOne(): List<Int> =
+    foldRight(List.empty()) { a, acc -> Cons(a + 1, acc) }
+
+fun List<Double>.stringify(): List<String> =
+    foldRight(List.empty()) { a, acc -> Cons(a.toString(), acc) }

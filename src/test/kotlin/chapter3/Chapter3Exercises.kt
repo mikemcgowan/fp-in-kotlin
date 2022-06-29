@@ -158,4 +158,14 @@ internal class Chapter3Exercises {
             )
         )
     }
+
+    @Test
+    fun exercise3dot15() {
+        assertEquals(List.of(2, 3, 4, 5), List.of(1, 2, 3, 4).addOne())
+    }
+
+    @Test
+    fun exercise3dot16() {
+        assertEquals(List.of("0.0", "2.5", "5.0", "7.5"), List.of(0.0, 2.5, 5.0, 7.5).stringify())
+    }
 }
