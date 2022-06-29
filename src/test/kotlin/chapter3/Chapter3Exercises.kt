@@ -102,4 +102,11 @@ internal class Chapter3Exercises {
         assertEquals(4, List.of('m', 'i', 'k', 'e').lengthViaFoldLeft())
         assertEquals(5, List.of(true, false, true, false, true).lengthViaFoldLeft())
     }
+
+    @Test
+    fun exercise3dot11() {
+        assertEquals(List.of(4, 3, 2, 1), List.of(1, 2, 3, 4).reverse())
+        assertEquals(Nil, Nil.reverse())
+        assertEquals(List.of(9), List.of(9).reverse())
+    }
 }

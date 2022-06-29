@@ -6,6 +6,7 @@ sealed class List<out A> {
             val tail = aa.sliceArray(1 until aa.size)
             return if (aa.isEmpty()) Nil else Cons(aa[0], of(*tail))
         }
+        fun <A> empty(): List<A> = Nil
     }
 }
 
@@ -65,3 +66,6 @@ fun <A> List<A>.length(): Int =
 
 fun <A> List<A>.lengthViaFoldLeft(): Int =
     foldLeft(0) { x, _ -> 1 + x }
+
+fun <A> List<A>.reverse(): List<A> =
+    foldLeft(List.empty()) { acc, a -> Cons(a, acc) }
