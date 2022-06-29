@@ -91,3 +91,12 @@ fun <A, B> List<A>.map(f: (A) -> B): List<B> =
 
 fun <A> List<A>.filter(f: (A) -> Boolean): List<A> =
     foldRight(List.empty()) { a, acc -> if (f(a)) Cons(a, acc) else acc }
+
+fun <A, B> List<A>.flatMap(f: (A) -> List<B>): List<B> =
+    foldLeft(List.empty()) { acc, a -> acc.append(f(a)) }
+
+fun <A, B> List<A>.flatMapViaFoldRight(f: (A) -> List<B>): List<B> =
+    foldRight(List.empty()) { a, acc -> f(a).append(acc) }
+
+fun <A> List<A>.filterViaFlatMap(f: (A) -> Boolean): List<A> =
+    flatMap { a -> if (f(a)) List.of(a) else List.empty() }

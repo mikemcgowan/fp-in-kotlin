@@ -179,4 +179,15 @@ internal class Chapter3Exercises {
     fun exercise3dot18() {
         assertEquals(List.of(2, 4, 6, 8, 10), List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter { it % 2 == 0 })
     }
+
+    @Test
+    fun exercise3dot19() {
+        assertEquals(List.of(1, 1, 2, 2, 3, 3), List.of(1, 2, 3).flatMap { i -> List.of(i, i) })
+        assertEquals(List.of(1, 1, 2, 2, 3, 3), List.of(1, 2, 3).flatMapViaFoldRight { i -> List.of(i, i) })
+    }
+
+    @Test
+    fun exercise3dot20() {
+        assertEquals(List.of(2, 4, 6, 8, 10), List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filterViaFlatMap { it % 2 == 0 })
+    }
 }
