@@ -190,4 +190,17 @@ internal class Chapter3Exercises {
     fun exercise3dot20() {
         assertEquals(List.of(2, 4, 6, 8, 10), List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filterViaFlatMap { it % 2 == 0 })
     }
+
+    @Test
+    fun exercise3dot21() {
+        assertEquals(List.of(5, 7, 9), List.addElements(List.of(1, 2, 3), List.of(4, 5, 6)))
+    }
+
+    @Test
+    fun exercise3dot22() {
+        assertEquals(
+            List.of("m", "ii", "kkk", "eeee"),
+            List.zipWith(List.of("m", "i", "k", "e"), List.of(1, 2, 3, 4)) { a, b -> a.repeat(b) }
+        )
+    }
 }
