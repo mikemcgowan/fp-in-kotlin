@@ -279,4 +279,17 @@ internal class Chapter3Exercises {
             ).maximum()
         )
     }
+
+    @Test
+    fun exercise3dot26() {
+        val l = Leaf(1)
+        val b = Branch(l, l)
+        assertEquals(0, l.depth())
+        assertEquals(1, b.depth())
+        assertEquals(2, Branch(l, b).depth())
+        assertEquals(3, Branch(l, Branch(b, l)).depth())
+        assertEquals(4, Branch(l, Branch(Branch(l, b), l)).depth())
+        assertEquals(5, Branch(l, Branch(Branch(l, Branch(l, b)), l)).depth())
+        assertEquals(6, Branch(l, Branch(Branch(l, Branch(Branch(b, l), b)), l)).depth())
+    }
 }

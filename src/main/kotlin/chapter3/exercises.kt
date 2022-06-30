@@ -144,3 +144,9 @@ fun Tree<Int>.maximum(): Int =
         is Leaf -> value
         is Branch -> maxOf(left.maximum(), right.maximum())
     }
+
+fun Tree<Int>.depth(): Int =
+    when (this) {
+        is Leaf -> 0
+        is Branch -> 1 + maxOf(left.depth(), right.depth())
+    }
