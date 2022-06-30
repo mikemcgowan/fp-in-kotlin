@@ -1,5 +1,7 @@
 package chapter3
 
+// List
+
 sealed class List<out A> {
     companion object {
         fun <A> of(vararg aa: A): List<A> {
@@ -122,4 +124,23 @@ tailrec fun <A> List<A>.hasSubsequence(sub: List<A>): Boolean =
         startsWith(sub) -> true
         this is Cons && sub is Cons -> tail.hasSubsequence(sub)
         else -> false
+    }
+
+// Tree
+
+sealed class Tree<out A>
+
+data class Leaf<A>(val value: A) : Tree<A>()
+data class Branch<A>(val left: Tree<A>, val right: Tree<A>) : Tree<A>()
+
+fun <A> Tree<A>.size(): Int =
+    when (this) {
+        is Leaf -> 1
+        is Branch -> 1 + left.size() + right.size()
+    }
+
+fun Tree<Int>.maximum(): Int =
+    when (this) {
+        is Leaf -> value
+        is Branch -> maxOf(left.maximum(), right.maximum())
     }

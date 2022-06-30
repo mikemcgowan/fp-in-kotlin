@@ -245,4 +245,38 @@ internal class Chapter3Exercises {
         assertTrue(xs.hasSubsequence(List.of(5)))
         assertFalse(xs.hasSubsequence(List.of(5, 6)))
     }
+
+    @Test
+    fun exercise3dot24() {
+        assertEquals(1, Leaf(1).size())
+        assertEquals(3, Branch(Leaf(1), Leaf(2)).size())
+        assertEquals(5, Branch(Leaf(1), Branch(Leaf(2), Leaf(3))).size())
+        assertEquals(7, Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4))).size())
+    }
+
+    @Test
+    fun exercise3dot25() {
+        assertEquals(8, Branch(Branch(Leaf(8), Leaf(2)), Branch(Leaf(3), Leaf(7))).maximum())
+        assertEquals(10, Branch(Branch(Leaf(8), Leaf(10)), Branch(Leaf(9), Leaf(2))).maximum())
+        assertEquals(7, Branch(Branch(Leaf(3), Leaf(7)), Branch(Leaf(7), Leaf(4))).maximum())
+        assertEquals(6, Branch(Branch(Leaf(3), Leaf(2)), Branch(Leaf(6), Leaf(4))).maximum())
+        assertEquals(
+            6, Branch(
+                Branch(
+                    Leaf(3),
+                    Branch(
+                        Leaf(2),
+                        Leaf(1)
+                    )
+                ),
+                Branch(
+                    Branch(
+                        Leaf(6),
+                        Leaf(5)
+                    ),
+                    Leaf(4)
+                )
+            ).maximum()
+        )
+    }
 }
