@@ -2,6 +2,7 @@ package chapter3
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 internal class Chapter3Exercises {
@@ -202,5 +203,46 @@ internal class Chapter3Exercises {
             List.of("m", "ii", "kkk", "eeee"),
             List.zipWith(List.of("m", "i", "k", "e"), List.of(1, 2, 3, 4)) { a, b -> a.repeat(b) }
         )
+    }
+
+    @Test
+    fun exercise3dot23() {
+        val xs = List.of(1, 2, 3, 4, 5)
+
+        assertTrue(xs.startsWith(List.empty()))
+        assertTrue(xs.startsWith(List.of(1)))
+        assertTrue(xs.startsWith(List.of(1, 2)))
+        assertTrue(xs.startsWith(List.of(1, 2, 3)))
+        assertTrue(xs.startsWith(List.of(1, 2, 3, 4)))
+        assertTrue(xs.startsWith(List.of(1, 2, 3, 4, 5)))
+        assertFalse(xs.startsWith(List.of(1, 2, 3, 4, 5, 6)))
+        assertFalse(xs.startsWith(List.of(2)))
+        assertFalse(xs.startsWith(List.of(1, 1)))
+        assertFalse(xs.startsWith(List.of(1, 3)))
+
+        assertTrue(xs.hasSubsequence(List.empty()))
+        assertTrue(xs.hasSubsequence(List.of(1)))
+        assertTrue(xs.hasSubsequence(List.of(1, 2)))
+        assertTrue(xs.hasSubsequence(List.of(1, 2, 3)))
+        assertTrue(xs.hasSubsequence(List.of(1, 2, 3, 4)))
+        assertTrue(xs.hasSubsequence(List.of(1, 2, 3, 4, 5)))
+        assertFalse(xs.hasSubsequence(List.of(1, 2, 3, 4, 5, 6)))
+        assertFalse(xs.hasSubsequence(List.of(6)))
+        assertFalse(xs.hasSubsequence(List.of(1, 3)))
+        assertFalse(xs.hasSubsequence(List.of(1, 2, 4)))
+        assertTrue(xs.hasSubsequence(List.of(2)))
+        assertTrue(xs.hasSubsequence(List.of(2, 3)))
+        assertTrue(xs.hasSubsequence(List.of(2, 3, 4)))
+        assertTrue(xs.hasSubsequence(List.of(2, 3, 4, 5)))
+        assertFalse(xs.hasSubsequence(List.of(2, 3, 4, 5, 6)))
+        assertTrue(xs.hasSubsequence(List.of(3)))
+        assertTrue(xs.hasSubsequence(List.of(3, 4)))
+        assertTrue(xs.hasSubsequence(List.of(3, 4, 5)))
+        assertFalse(xs.hasSubsequence(List.of(3, 4, 5, 6)))
+        assertTrue(xs.hasSubsequence(List.of(4)))
+        assertTrue(xs.hasSubsequence(List.of(4, 5)))
+        assertFalse(xs.hasSubsequence(List.of(4, 5, 6)))
+        assertTrue(xs.hasSubsequence(List.of(5)))
+        assertFalse(xs.hasSubsequence(List.of(5, 6)))
     }
 }

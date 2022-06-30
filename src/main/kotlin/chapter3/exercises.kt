@@ -109,3 +109,17 @@ fun <A, B> List<A>.flatMapViaFoldRight(f: (A) -> List<B>): List<B> =
 
 fun <A> List<A>.filterViaFlatMap(f: (A) -> Boolean): List<A> =
     flatMap { a -> if (f(a)) List.of(a) else List.empty() }
+
+tailrec fun <A> List<A>.startsWith(xs: List<A>): Boolean =
+    when {
+        xs is Nil -> true
+        this is Cons && xs is Cons -> if (head == xs.head) tail.startsWith(xs.tail) else false
+        else -> false
+    }
+
+tailrec fun <A> List<A>.hasSubsequence(sub: List<A>): Boolean =
+    when {
+        startsWith(sub) -> true
+        this is Cons && sub is Cons -> tail.hasSubsequence(sub)
+        else -> false
+    }
