@@ -18,14 +18,11 @@ sealed class List<out A> {
         fun addElements(xs: List<Int>, ys: List<Int>): List<Int> =
             zipWith(xs, ys) { x, y -> x + y }
 
-        fun <A, B, C> zipWith(xs: List<A>, ys: List<B>, f: (A, B) -> C): List<C> {
-            tailrec fun go(xs: List<A>, ys: List<B>, acc: List<C>): List<C> =
-                when {
-                    xs is Cons && ys is Cons -> go(xs.tail, ys.tail, acc.append(of(f(xs.head, ys.head))))
-                    else -> acc
-                }
-            return go(xs, ys, empty())
-        }
+        fun <A, B, C> zipWith(xs: List<A>, ys: List<B>, f: (A, B) -> C): List<C> =
+            when {
+                xs is Cons && ys is Cons -> Cons(f(xs.head, ys.head), zipWith(xs.tail, ys.tail, f))
+                else -> Nil
+            }
     }
 }
 
