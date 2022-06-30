@@ -156,3 +156,21 @@ fun <A, B> Tree<A>.map(f: (A) -> B): Tree<B> =
         is Leaf -> Leaf(f(value))
         is Branch -> Branch(left.map(f), right.map(f))
     }
+
+fun <A, B> Tree<A>.fold(l: (A) -> B, b: (B, B) -> B): B =
+    when (this) {
+        is Leaf -> l(value)
+        is Branch -> b(left.fold(l, b), right.fold(l, b))
+    }
+
+fun <A> Tree<A>.sizeF(): Int =
+    fold({ 1 }) { l, r -> 1 + l + r }
+
+fun Tree<Int>.maximumF(): Int =
+    fold({ it }) { l, r -> maxOf(l, r) }
+
+fun Tree<Int>.depthF(): Int =
+    fold({ 0 }) { l, r -> 1 + maxOf(l, r) }
+
+fun <A, B> Tree<A>.mapF(f: (A) -> B): Tree<B> =
+    fold({ Leaf(f(it)) }) { l: Tree<B>, r: Tree<B> -> Branch(l, r) }

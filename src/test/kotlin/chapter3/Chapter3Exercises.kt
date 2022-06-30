@@ -304,4 +304,58 @@ internal class Chapter3Exercises {
             Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).map { "x".repeat(it) }
         )
     }
+
+    @Test
+    fun exercise3dot28() {
+        // sizeF
+        assertEquals(1, Leaf(1).sizeF())
+        assertEquals(3, Branch(Leaf(1), Leaf(2)).sizeF())
+        assertEquals(5, Branch(Leaf(1), Branch(Leaf(2), Leaf(3))).sizeF())
+        assertEquals(7, Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4))).sizeF())
+
+        // maximumF
+        assertEquals(8, Branch(Branch(Leaf(8), Leaf(2)), Branch(Leaf(3), Leaf(7))).maximumF())
+        assertEquals(10, Branch(Branch(Leaf(8), Leaf(10)), Branch(Leaf(9), Leaf(2))).maximumF())
+        assertEquals(7, Branch(Branch(Leaf(3), Leaf(7)), Branch(Leaf(7), Leaf(4))).maximumF())
+        assertEquals(6, Branch(Branch(Leaf(3), Leaf(2)), Branch(Leaf(6), Leaf(4))).maximumF())
+        assertEquals(
+            6, Branch(
+                Branch(
+                    Leaf(3),
+                    Branch(
+                        Leaf(2),
+                        Leaf(1)
+                    )
+                ),
+                Branch(
+                    Branch(
+                        Leaf(6),
+                        Leaf(5)
+                    ),
+                    Leaf(4)
+                )
+            ).maximumF()
+        )
+
+        // depthF
+        val l = Leaf(1)
+        val b = Branch(l, l)
+        assertEquals(0, l.depthF())
+        assertEquals(1, b.depthF())
+        assertEquals(2, Branch(l, b).depthF())
+        assertEquals(3, Branch(l, Branch(b, l)).depthF())
+        assertEquals(4, Branch(l, Branch(Branch(l, b), l)).depthF())
+        assertEquals(5, Branch(l, Branch(Branch(l, Branch(l, b)), l)).depthF())
+        assertEquals(6, Branch(l, Branch(Branch(l, Branch(Branch(b, l), b)), l)).depthF())
+
+        // mapF
+        assertEquals(
+            Branch(Branch(Leaf(4), Leaf(9)), Branch(Leaf(16), Leaf(25))),
+            Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).mapF { it * it }
+        )
+        assertEquals(
+            Branch(Branch(Leaf("xx"), Leaf("xxx")), Branch(Leaf("xxxx"), Leaf("xxxxx"))),
+            Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).mapF { "x".repeat(it) }
+        )
+    }
 }
