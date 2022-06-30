@@ -292,4 +292,16 @@ internal class Chapter3Exercises {
         assertEquals(5, Branch(l, Branch(Branch(l, Branch(l, b)), l)).depth())
         assertEquals(6, Branch(l, Branch(Branch(l, Branch(Branch(b, l), b)), l)).depth())
     }
+
+    @Test
+    fun exercise3dot27() {
+        assertEquals(
+            Branch(Branch(Leaf(4), Leaf(9)), Branch(Leaf(16), Leaf(25))),
+            Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).map { it * it }
+        )
+        assertEquals(
+            Branch(Branch(Leaf("xx"), Leaf("xxx")), Branch(Leaf("xxxx"), Leaf("xxxxx"))),
+            Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).map { "x".repeat(it) }
+        )
+    }
 }
