@@ -1,5 +1,7 @@
 package chapter4
 
+import kotlin.math.pow
+
 sealed class Option<out A>
 
 object None : Option<Nothing>()
@@ -34,3 +36,9 @@ fun <A, B> Option<A>.filter(f: (A) -> Boolean): Option<A> =
         is None -> None
         is Some -> if (f(get)) this else None
     }
+
+fun mean(xs: List<Double>): Option<Double> =
+    if (xs.isEmpty()) None else Some(xs.sum() / xs.size)
+
+fun variance(xs: List<Double>): Option<Double> =
+    mean(xs).flatMap { m -> mean(xs.map { (it - m).pow(2) }) }
