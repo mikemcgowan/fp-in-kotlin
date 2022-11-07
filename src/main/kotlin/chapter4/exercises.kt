@@ -42,3 +42,6 @@ fun mean(xs: List<Double>): Option<Double> =
 
 fun variance(xs: List<Double>): Option<Double> =
     mean(xs).flatMap { m -> mean(xs.map { (it - m).pow(2) }) }
+
+fun <A, B, C> map2(oa: Option<A>, ob: Option<B>, f: (A, B) -> C): Option<C> =
+    oa.flatMap { a -> ob.map { b -> f(a, b) } }
