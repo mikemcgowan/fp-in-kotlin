@@ -2,6 +2,7 @@ package chapter4
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 internal class Chapter4Exercises {
 
@@ -26,12 +27,12 @@ internal class Chapter4Exercises {
     @Test
     fun exercise4dot5() {
         assertEquals(Some(listOf(1, 4, 9, 16)), Option.traverseInefficient(listOf(1, 2, 3, 4)) { x -> Some(x * x) })
-        assertEquals(Some(listOf(1, 2, 3)), Option.traverseInefficient(listOf("1", "2", "3")) { s -> catches { s.toInt() } })
-        assertEquals(None, Option.traverseInefficient(listOf("1", "x", "3")) { s -> catches { s.toInt() } })
+        assertEquals(Some(listOf(1, 2, 3)), Option.traverseInefficient(listOf("1", "2", "3")) { s -> Option.catches { s.toInt() } })
+        assertEquals(None, Option.traverseInefficient(listOf("1", "x", "3")) { s -> Option.catches { s.toInt() } })
 
         assertEquals(Some(listOf(1, 4, 9, 16)), Option.traverse(listOf(1, 2, 3, 4)) { x -> Some(x * x) })
-        assertEquals(Some(listOf(1, 2, 3)), Option.traverse(listOf("1", "2", "3")) { s -> catches { s.toInt() } })
-        assertEquals(None, Option.traverse(listOf("1", "x", "3")) { s -> catches { s.toInt() } })
+        assertEquals(Some(listOf(1, 2, 3)), Option.traverse(listOf("1", "2", "3")) { s -> Option.catches { s.toInt() } })
+        assertEquals(None, Option.traverse(listOf("1", "x", "3")) { s -> Option.catches { s.toInt() } })
 
         assertEquals(Some(listOf(1, 2, 3, 4)), Option.sequenceViaTraverse(listOf(Some(1), Some(2), Some(3), Some(4))))
     }
@@ -54,5 +55,16 @@ internal class Chapter4Exercises {
         assertEquals(Left("Oops"), map2(Left("Oops"), Right(4), multi))
         assertEquals(Left("Oops"), map2(Right(4), Left("Oops"), multi))
         assertEquals(Left("Oops"), map2(Left("Oops"), Left("Dear"), multi))
+    }
+
+    @Test
+    fun exercise4dot7() {
+        assertEquals(Right(listOf(1, 4, 9, 16)), Either.traverse(listOf(1, 2, 3, 4)) { x -> Right(x * x) })
+        val traverseResult = Either.traverse(listOf("1", "x", "3", "y", "5")) { s -> Either.catches { s.toInt() } }
+        if (traverseResult is Left) assertEquals("""For input string: "x"""", traverseResult.value.message) else fail()
+
+        assertEquals(Right(listOf(1, 2, 3)), Either.sequenceViaTraverse(listOf(Right(1), Right(2), Right(3))))
+        val sequenceResult = Either.sequenceViaTraverse(listOf(Right(1), Left("Oops"), Right(3)))
+        if (sequenceResult is Left) assertEquals("Oops", sequenceResult.value) else fail()
     }
 }

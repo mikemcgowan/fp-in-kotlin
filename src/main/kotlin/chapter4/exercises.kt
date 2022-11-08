@@ -21,6 +21,13 @@ sealed class Option<out A> {
 
         fun <A> sequenceViaTraverse(xs: List<Option<A>>): Option<List<A>> =
             traverse(xs) { it }
+
+        fun <A> catches(a: () -> A): Option<A> =
+            try {
+                Some(a())
+            } catch (e: Throwable) {
+                None
+            }
     }
 }
 
@@ -66,16 +73,26 @@ fun variance(xs: List<Double>): Option<Double> =
 fun <A, B, C> map2(oa: Option<A>, ob: Option<B>, f: (A, B) -> C): Option<C> =
     oa.flatMap { a -> ob.map { b -> f(a, b) } }
 
-fun <A> catches(a: () -> A): Option<A> =
-    try {
-        Some(a())
-    } catch (e: Throwable) {
-        None
-    }
-
 // Either
 
-sealed class Either<out E, out A>
+sealed class Either<out E, out A> {
+    companion object {
+        fun <E, A, B> traverse(xs: List<A>, f: (A) -> Either<E, B>): Either<E, List<B>> =
+            xs.foldRight(Right(emptyList())) { a, oacc ->
+                map2(f(a), oacc) { aa, acc -> listOf(aa).plus(acc) }
+            }
+
+        fun <E, A> sequenceViaTraverse(xs: List<Either<E, A>>): Either<E, List<A>> =
+            traverse(xs) { it }
+
+        fun <A> catches(a: () -> A): Either<Exception, A> =
+            try {
+                Right(a())
+            } catch (e: Exception) {
+                Left(e)
+            }
+    }
+}
 
 data class Left<out E>(val value: E) : Either<E, Nothing>()
 data class Right<out A>(val value: A) : Either<Nothing, A>()
