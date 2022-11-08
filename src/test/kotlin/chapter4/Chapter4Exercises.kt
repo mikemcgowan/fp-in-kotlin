@@ -35,4 +35,24 @@ internal class Chapter4Exercises {
 
         assertEquals(Some(listOf(1, 2, 3, 4)), Option.sequenceViaTraverse(listOf(Some(1), Some(2), Some(3), Some(4))))
     }
+
+    @Test
+    fun exercise4dot6() {
+        val greet: (String) -> String = { "Hi, $it" }
+        assertEquals(Right("Hi, Mike"), Right("Mike").map(greet))
+        assertEquals(Left("Oops"), Left("Oops").map(greet))
+
+        val square: (Int) -> Either<Int, Int> = { Right(it * it) }
+        assertEquals(Right(16), Right(4).flatMap(square))
+        assertEquals(Left("Oops"), Left("Oops").flatMap(square))
+
+        assertEquals(Right(7), Right(7).orElse { Right(9) })
+        assertEquals(Right(7), Left("Oops").orElse { Right(7) })
+
+        val multi: (Int, Int) -> Int = { a, b -> a * b }
+        assertEquals(Right(12), map2(Right(3), Right(4), multi))
+        assertEquals(Left("Oops"), map2(Left("Oops"), Right(4), multi))
+        assertEquals(Left("Oops"), map2(Right(4), Left("Oops"), multi))
+        assertEquals(Left("Oops"), map2(Left("Oops"), Left("Dear"), multi))
+    }
 }
