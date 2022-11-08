@@ -2,7 +2,25 @@ package chapter4
 
 import kotlin.math.pow
 
-sealed class Option<out A>
+sealed class Option<out A> {
+    companion object {
+        fun <A> sequence(xs: List<Option<A>>): Option<List<A>> =
+            xs.foldRight(Some(emptyList())) { oa, oacc ->
+                map2(oa, oacc) { a, acc -> listOf(a).plus(acc) }
+            }
+
+        fun <A, B> traverseInefficient(xs: List<A>, f: (A) -> Option<B>): Option<List<B>> =
+            sequence(xs.map(f))
+
+        fun <A, B> traverse(xs: List<A>, f: (A) -> Option<B>): Option<List<B>> =
+            xs.foldRight(Some(emptyList())) { a, oacc ->
+                map2(f(a), oacc) { aa, acc -> listOf(aa).plus(acc) }
+            }
+
+        fun <A> sequenceViaTraverse(xs: List<Option<A>>): Option<List<A>> =
+            traverse(xs) { it }
+    }
+}
 
 object None : Option<Nothing>()
 data class Some<out A>(val get: A) : Option<A>()
@@ -45,3 +63,10 @@ fun variance(xs: List<Double>): Option<Double> =
 
 fun <A, B, C> map2(oa: Option<A>, ob: Option<B>, f: (A, B) -> C): Option<C> =
     oa.flatMap { a -> ob.map { b -> f(a, b) } }
+
+fun <A> catches(a: () -> A): Option<A> =
+    try {
+        Some(a())
+    } catch (e: Throwable) {
+        None
+    }
