@@ -62,3 +62,21 @@ fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> =
         is Empty -> Stream.empty()
         is Cons -> if (p(head())) Stream.cons(head) { tail().takeWhile(p) } else Stream.empty()
     }
+
+fun <A, B> Stream<A>.foldRight(z: () -> B, f: (A, () -> B) -> B): B =
+    when (this) {
+        is Cons -> f(head()) { tail().foldRight(z, f) }
+        is Empty -> z()
+    }
+
+fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
+    when (this) {
+        is Empty -> true
+        is Cons -> p(head()) && tail().forAll(p)
+    }
+
+fun <A> Stream<A>.forAllViaFoldRight(p: (A) -> Boolean): Boolean =
+    foldRight({ true }) { a, b -> p(a) && b() }
+
+fun <A> Stream<A>.takeWhileViaFoldRight(p: (A) -> Boolean): Stream<A> =
+    foldRight({ Stream.empty() }) { a, b -> if (p(a)) Stream.cons({ a }, b) else b() }
