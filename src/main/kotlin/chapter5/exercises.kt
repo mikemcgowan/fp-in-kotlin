@@ -30,6 +30,9 @@ fun <A> Stream<A>.headOption(): Option<A> =
         is Cons -> Some(head())
     }
 
+fun <A> Stream<A>.headOptionViaFoldRight(): Option<A> =
+    foldRight({ Option.empty() }) { a, _ -> Some(a) }
+
 fun <A> Stream<A>.toList(): List<A> {
     tailrec fun go(s: Stream<A>, acc: List<A>): List<A> =
         when (s) {

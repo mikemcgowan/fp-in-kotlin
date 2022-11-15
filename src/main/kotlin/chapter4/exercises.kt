@@ -28,6 +28,8 @@ sealed class Option<out A> {
             } catch (e: Throwable) {
                 None
             }
+
+        fun <A> empty(): Option<A> = None
     }
 }
 

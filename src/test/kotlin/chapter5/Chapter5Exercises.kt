@@ -1,6 +1,8 @@
 package chapter5
 
 import chapter3.List
+import chapter4.None
+import chapter4.Some
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -69,5 +71,15 @@ internal class Chapter5Exercises {
         assertEquals(List.of(1, 2, 3, 4), xs.takeWhileViaFoldRight { it < 5 }.toList())
         assertEquals(List.of(1, 2, 3, 4, 5), xs.takeWhileViaFoldRight { it < 6 }.toList())
         assertEquals(List.of(1, 2, 3, 4, 5), xs.takeWhileViaFoldRight { true }.toList())
+    }
+
+    @Test
+    fun exercise5dot6() {
+        assertEquals(Some(1), xs.headOption());
+        assertEquals(Some(1), xs.headOptionViaFoldRight());
+
+        val ys: Stream<Int> = Stream.empty()
+        assertEquals(None, ys.headOption());
+        assertEquals(None, ys.headOptionViaFoldRight());
     }
 }
