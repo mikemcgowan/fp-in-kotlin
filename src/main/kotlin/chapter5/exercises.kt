@@ -38,3 +38,27 @@ fun <A> Stream<A>.toList(): List<A> {
         }
     return go(this, List.empty())
 }
+
+fun <A> Stream<A>.take(n: Int): Stream<A> {
+    fun go(s: Stream<A>, m: Int): Stream<A> =
+        if (m == 0) Stream.empty() else when (s) {
+            is Empty -> Stream.empty()
+            is Cons -> Stream.cons(s.head) { go(s.tail(), m - 1) }
+        }
+    return go(this, n)
+}
+
+fun <A> Stream<A>.drop(n: Int): Stream<A> {
+    tailrec fun go(s: Stream<A>, m: Int): Stream<A> =
+        if (m == 0) s else when (s) {
+            is Empty -> Stream.empty()
+            is Cons -> go(s.tail(), m - 1)
+        }
+    return go(this, n)
+}
+
+fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> =
+    when (this) {
+        is Empty -> Stream.empty()
+        is Cons -> if (p(head())) Stream.cons(head) { tail().takeWhile(p) } else Stream.empty()
+    }
