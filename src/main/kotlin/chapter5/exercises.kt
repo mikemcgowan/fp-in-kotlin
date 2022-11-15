@@ -83,3 +83,15 @@ fun <A> Stream<A>.forAllViaFoldRight(p: (A) -> Boolean): Boolean =
 
 fun <A> Stream<A>.takeWhileViaFoldRight(p: (A) -> Boolean): Stream<A> =
     foldRight({ Stream.empty() }) { a, b -> if (p(a)) Stream.cons({ a }, b) else b() }
+
+fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B> =
+    foldRight({ Stream.empty() }) { a, b -> Stream.cons({ f(a) }, b) }
+
+fun <A> Stream<A>.filter(p: (A) -> Boolean): Stream<A> =
+    foldRight({ Stream.empty() }) { a, b -> if (p(a)) Stream.cons({ a }, b) else b() }
+
+fun <A> Stream<A>.append(other: () -> Stream<A>): Stream<A> =
+    foldRight(other) { a, b -> Stream.cons({ a }, b) }
+
+fun <A, B> Stream<A>.flatMap(f: (A) -> Stream<B>): Stream<B> =
+    foldRight({ Stream.empty() }) { a, b -> f(a).append(b) }

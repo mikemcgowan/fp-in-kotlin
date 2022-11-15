@@ -82,4 +82,16 @@ internal class Chapter5Exercises {
         assertEquals(None, ys.headOption());
         assertEquals(None, ys.headOptionViaFoldRight());
     }
+
+    @Test
+    fun exercise5dot7() {
+        assertEquals(List.of(1, 4, 9, 16, 25), xs.map { it * it }.toList())
+        assertEquals(List.of(2, 4), xs.filter { it % 2 == 0 }.toList())
+
+        val ys: Stream<Int> = Stream.of(6, 7, 8, 9)
+        assertEquals(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9), xs.append { ys }.toList())
+
+        val zs: Stream<Int> = ys.flatMap { i -> Stream.of(i, i) }
+        assertEquals(List.of(6, 6, 7, 7, 8, 8, 9, 9), zs.toList())
+    }
 }
