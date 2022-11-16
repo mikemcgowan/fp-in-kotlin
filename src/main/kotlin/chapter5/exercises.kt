@@ -118,3 +118,44 @@ fun <A> Stream<A>.append(other: () -> Stream<A>): Stream<A> =
 
 fun <A, B> Stream<A>.flatMap(f: (A) -> Stream<B>): Stream<B> =
     foldRight({ Stream.empty() }) { a, b -> f(a).append(b) }
+
+fun <A, B> Stream<A>.mapViaUnfold(f: (A) -> B): Stream<B> =
+    Stream.unfold(this) {
+        when (it) {
+            is Empty -> None
+            is Cons -> Some(Pair(f(it.head()), it.tail()))
+        }
+    }
+
+fun <A> Stream<A>.takeViaUnfold(n: Int): Stream<A> =
+    Stream.unfold(Pair(this, 0)) {
+        when (val xs = it.first) {
+            is Empty -> None
+            is Cons -> if (it.second >= n) None else Some(Pair(xs.head(), Pair(xs.tail(), it.second + 1)))
+        }
+    }
+
+fun <A> Stream<A>.takeWhileViaUnfold(p: (A) -> Boolean): Stream<A> =
+    Stream.unfold(this) {
+        when (it) {
+            is Empty -> None
+            is Cons -> if (p(it.head())) Some(Pair(it.head(), it.tail())) else None
+        }
+    }
+
+fun <A, B, C> Stream<A>.zipWith(other: Stream<B>, f: (A, B) -> C): Stream<C> =
+    Stream.unfold(Pair(this, other)) {
+        val xs = it.first
+        val ys = it.second
+        if (xs is Cons && ys is Cons) Some(Pair(f(xs.head(), ys.head()), Pair(xs.tail(), ys.tail()))) else None
+    }
+
+fun <A, B> Stream<A>.zipAll(other: Stream<B>): Stream<Pair<Option<A>, Option<B>>> =
+    Stream.unfold(Pair(this, other)) {
+        val xs = it.first
+        val ys = it.second
+        if (xs is Cons && ys is Cons) Some(Pair(Pair(Some(xs.head()), Some(ys.head())), Pair(xs.tail(), ys.tail())))
+        else if (xs is Cons && ys is Empty) Some(Pair(Pair(Some(xs.head()), None), Pair(xs.tail(), Empty)))
+        else if (xs is Empty && ys is Cons) Some(Pair(Pair(None, Some(ys.head())), Pair(Empty, ys.tail())))
+        else None
+    }

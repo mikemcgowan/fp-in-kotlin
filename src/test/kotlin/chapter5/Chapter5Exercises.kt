@@ -120,4 +120,50 @@ internal class Chapter5Exercises {
         assertEquals(List.of(10, 11, 12, 13, 14), Stream.fromViaUnfold(10).take(5).toList())
         assertEquals(List.of(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144), Stream.fibsViaUnfold().take(13).toList())
     }
+
+    @Test
+    fun exercise5dot13() {
+        assertEquals(List.of(1, 4, 9, 16, 25), xs.mapViaUnfold { it * it }.toList())
+
+        assertEquals(List.empty(), xs.takeViaUnfold(0).toList())
+        assertEquals(List.of(1), xs.takeViaUnfold(1).toList())
+        assertEquals(List.of(1, 2), xs.takeViaUnfold(2).toList())
+        assertEquals(List.of(1, 2, 3), xs.takeViaUnfold(3).toList())
+        assertEquals(List.of(1, 2, 3, 4), xs.takeViaUnfold(4).toList())
+        assertEquals(List.of(1, 2, 3, 4, 5), xs.takeViaUnfold(5).toList())
+        assertEquals(List.of(1, 2, 3, 4, 5), xs.takeViaUnfold(6).toList())
+
+        assertEquals(List.empty(), xs.takeWhileViaUnfold { false }.toList())
+        assertEquals(List.empty(), xs.takeWhileViaUnfold { it < 1 }.toList())
+        assertEquals(List.of(1), xs.takeWhileViaUnfold { it < 2 }.toList())
+        assertEquals(List.of(1, 2), xs.takeWhileViaUnfold { it < 3 }.toList())
+        assertEquals(List.of(1, 2, 3), xs.takeWhileViaUnfold { it < 4 }.toList())
+        assertEquals(List.of(1, 2, 3, 4), xs.takeWhileViaUnfold { it < 5 }.toList())
+        assertEquals(List.of(1, 2, 3, 4, 5), xs.takeWhileViaUnfold { it < 6 }.toList())
+        assertEquals(List.of(1, 2, 3, 4, 5), xs.takeWhileViaUnfold { true }.toList())
+
+        val ys = Stream.of(100, 101, 102, 103, 104, 105, 106, 107, 108, 109)
+        assertEquals(List.of("101", "103", "105", "107", "109"), xs.zipWith(ys) { a, b -> (a + b).toString() }.toList())
+
+        assertEquals(
+            List.of(
+                Pair(Some(1), Some("a")),
+                Pair(Some(2), Some("b")),
+                Pair(Some(3), Some("c")),
+                Pair(Some(4), None),
+                Pair(Some(5), None)
+            ), xs.zipAll(Stream.of("a", "b", "c")).toList()
+        )
+        assertEquals(
+            List.of(
+                Pair(Some(1), Some("a")),
+                Pair(Some(2), Some("b")),
+                Pair(Some(3), Some("c")),
+                Pair(Some(4), Some("d")),
+                Pair(Some(5), Some("e")),
+                Pair(None, Some("f")),
+                Pair(None, Some("g")),
+            ), xs.zipAll(Stream.of("a", "b", "c", "d", "e", "f", "g")).toList()
+        )
+    }
 }
