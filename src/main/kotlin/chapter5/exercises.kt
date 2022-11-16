@@ -24,6 +24,12 @@ sealed class Stream<out A> {
         fun onesViaConstant(): Stream<Int> = constant(1)
 
         fun from(n: Int): Stream<Int> = cons({ n }, { from(n + 1) })
+
+        fun fibs(): Stream<Int> {
+            fun go(current: Int, next: Int): Stream<Int> =
+                cons({ current }, { go(next, current + next) })
+            return go(0, 1)
+        }
     }
 }
 

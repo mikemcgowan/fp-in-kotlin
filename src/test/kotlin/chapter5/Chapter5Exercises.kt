@@ -107,4 +107,9 @@ internal class Chapter5Exercises {
     fun exercise5dot9() {
         assertEquals(List.of(10, 11, 12, 13, 14), Stream.from(10).take(5).toList())
     }
+
+    @Test
+    fun exercise5dot10() {
+        assertEquals(List.of(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144), Stream.fibs().take(13).toList())
+    }
 }
