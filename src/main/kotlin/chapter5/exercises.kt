@@ -22,6 +22,8 @@ sealed class Stream<out A> {
         fun ones(): Stream<Int> = cons({ 1 }, { ones() })
         fun <A> constant(a: A): Stream<A> = cons({ a }, { constant(a) })
         fun onesViaConstant(): Stream<Int> = constant(1)
+
+        fun from(n: Int): Stream<Int> = cons({ n }, { from(n + 1) })
     }
 }
 

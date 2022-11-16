@@ -102,4 +102,9 @@ internal class Chapter5Exercises {
         assertEquals(List.of(1, 1, 1), Stream.constant(1).take(3).toList())
         assertEquals(List.of("hi", "hi", "hi"), Stream.constant("hi").take(3).toList())
     }
+
+    @Test
+    fun exercise5dot9() {
+        assertEquals(List.of(10, 11, 12, 13, 14), Stream.from(10).take(5).toList())
+    }
 }
