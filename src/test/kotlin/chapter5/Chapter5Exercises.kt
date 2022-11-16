@@ -94,4 +94,12 @@ internal class Chapter5Exercises {
         val zs: Stream<Int> = ys.flatMap { i -> Stream.of(i, i) }
         assertEquals(List.of(6, 6, 7, 7, 8, 8, 9, 9), zs.toList())
     }
+
+    @Test
+    fun exercise5dot8() {
+        assertEquals(List.of(1, 1, 1), Stream.ones().take(3).toList())
+        assertEquals(List.of(1, 1, 1), Stream.onesViaConstant().take(3).toList())
+        assertEquals(List.of(1, 1, 1), Stream.constant(1).take(3).toList())
+        assertEquals(List.of("hi", "hi", "hi"), Stream.constant("hi").take(3).toList())
+    }
 }
