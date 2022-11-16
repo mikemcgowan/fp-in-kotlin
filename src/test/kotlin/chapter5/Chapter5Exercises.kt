@@ -174,4 +174,17 @@ internal class Chapter5Exercises {
         assertFalse(xs.startsWith(Stream.of(2, 3)))
         assertFalse(xs.startsWith(Stream.of(1, 2, 3, 4, 5, 6)))
     }
+
+    @Test
+    fun exercise5dot15() {
+        assertEquals(
+            List.of(
+                List.of(1, 2, 3, 4, 5),
+                List.of(2, 3, 4, 5),
+                List.of(3, 4, 5),
+                List.of(4, 5),
+                List.of(5),
+            ), xs.tails().map { it.toList() }.toList()
+        )
+    }
 }

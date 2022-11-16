@@ -162,3 +162,11 @@ fun <A, B> Stream<A>.zipAll(other: Stream<B>): Stream<Pair<Option<A>, Option<B>>
 
 fun <A> Stream<A>.startsWith(other: Stream<A>): Boolean =
     this.zipAll(other).takeWhile { it.second is Some }.forAll { it.first == it.second }
+
+fun <A> Stream<A>.tails(): Stream<Stream<A>> =
+    Stream.unfold(this) {
+        when (it) {
+            is Empty -> None
+            is Cons -> Some(Pair(it, it.tail()))
+        }
+    }
