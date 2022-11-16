@@ -159,3 +159,6 @@ fun <A, B> Stream<A>.zipAll(other: Stream<B>): Stream<Pair<Option<A>, Option<B>>
         else if (xs is Empty && ys is Cons) Some(Pair(Pair(None, Some(ys.head())), Pair(Empty, ys.tail())))
         else None
     }
+
+fun <A> Stream<A>.startsWith(other: Stream<A>): Boolean =
+    this.zipAll(other).takeWhile { it.second is Some }.forAll { it.first == it.second }

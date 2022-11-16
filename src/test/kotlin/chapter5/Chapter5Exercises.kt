@@ -166,4 +166,12 @@ internal class Chapter5Exercises {
             ), xs.zipAll(Stream.of("a", "b", "c", "d", "e", "f", "g")).toList()
         )
     }
+
+    @Test
+    fun exercise5dot14() {
+        assertTrue(xs.startsWith(Stream.of(1)))
+        assertTrue(xs.startsWith(Stream.of(1, 2, 3)))
+        assertFalse(xs.startsWith(Stream.of(2, 3)))
+        assertFalse(xs.startsWith(Stream.of(1, 2, 3, 4, 5, 6)))
+    }
 }
