@@ -112,4 +112,12 @@ internal class Chapter5Exercises {
     fun exercise5dot10() {
         assertEquals(List.of(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144), Stream.fibs().take(13).toList())
     }
+
+    @Test
+    fun exercise5dot12() {
+        assertEquals(List.of(1, 1, 1), Stream.onesViaUnfold().take(3).toList())
+        assertEquals(List.of("hi", "hi", "hi"), Stream.constantViaUnfold("hi").take(3).toList())
+        assertEquals(List.of(10, 11, 12, 13, 14), Stream.fromViaUnfold(10).take(5).toList())
+        assertEquals(List.of(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144), Stream.fibsViaUnfold().take(13).toList())
+    }
 }

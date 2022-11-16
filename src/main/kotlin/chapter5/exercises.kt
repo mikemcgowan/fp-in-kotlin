@@ -30,6 +30,17 @@ sealed class Stream<out A> {
                 cons({ current }, { go(next, current + next) })
             return go(0, 1)
         }
+
+        fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> =
+            when (val result = f(z)) {
+                is None -> empty()
+                is Some -> cons({ result.get.first }, { unfold(result.get.second, f) })
+            }
+
+        fun onesViaUnfold(): Stream<Int> = unfold(1) { Some(Pair(1, 1)) }
+        fun <A> constantViaUnfold(a: A): Stream<A> = unfold(a) { Some(Pair(it, it)) }
+        fun fromViaUnfold(n: Int): Stream<Int> = unfold(n) { Some(Pair(it, it + 1)) }
+        fun fibsViaUnfold(): Stream<Int> = unfold(Pair(0, 1)) { Some(Pair(it.first, Pair(it.second, it.first + it.second))) }
     }
 }
 
