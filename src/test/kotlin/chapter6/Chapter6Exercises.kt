@@ -45,4 +45,10 @@ internal class Chapter6Exercises {
         assertEquals(size, xs.length())
         assertEquals(List.of(16159453, 1281479697, 340305902, 2015756020, 1770001318), xs)
     }
+
+    @Test
+    fun exercise6dot5() {
+        val (d, _) = doubleR()(rng)
+        assertTrue(d > 0.00751 && d < 0.00753)
+    }
 }

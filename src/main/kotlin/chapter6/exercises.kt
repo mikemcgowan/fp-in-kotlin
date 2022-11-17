@@ -9,6 +9,8 @@ interface RNG {
     fun nextInt(): Pair<Int, RNG>
 }
 
+typealias Rand<A> = (RNG) -> Pair<A, RNG>
+
 data class SimpleRNG(val seed: Long) : RNG {
     override fun nextInt(): Pair<Int, RNG> {
         val newSeed = (seed * 0x5DEECE66DL + 0xBL) and 0xFFFFFFFFFFFFL
@@ -57,3 +59,12 @@ fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> =
         val (xs, rng3) = ints(count - 1, rng2)
         Cons(i, xs) to rng3
     }
+
+fun <A, B> map(s: Rand<A>, f: (A) -> B): Rand<B> =
+    { rng ->
+        val (a, rng2) = s(rng)
+        f(a) to rng2
+    }
+
+fun doubleR(): Rand<Double> =
+    map(::nonNegativeInt) { it.toDouble() / Int.MAX_VALUE.toDouble() }
