@@ -3,6 +3,7 @@ package chapter6
 import chapter3.Cons
 import chapter3.List
 import chapter3.Nil
+import chapter3.foldRight
 import kotlin.math.abs
 
 interface RNG {
@@ -60,11 +61,32 @@ fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> =
         Cons(i, xs) to rng3
     }
 
+fun <A> unit(a: A): Rand<A> = { rng -> a to rng }
+
 fun <A, B> map(s: Rand<A>, f: (A) -> B): Rand<B> =
     { rng ->
         val (a, rng2) = s(rng)
         f(a) to rng2
     }
 
-fun doubleR(): Rand<Double> =
-    map(::nonNegativeInt) { it.toDouble() / Int.MAX_VALUE.toDouble() }
+fun intR(): Rand<Int> = { rng -> rng.nextInt() }
+fun doubleR(): Rand<Double> = map(::nonNegativeInt) { it.toDouble() / Int.MAX_VALUE.toDouble() }
+
+fun <A, B, C> map2(ra: Rand<A>, rb: Rand<B>, f: (A, B) -> C): Rand<C> =
+    { rng ->
+        val (a, rng2) = ra(rng)
+        val (b, rng3) = rb(rng2)
+        f(a, b) to rng3
+    }
+
+fun <A> sequence(fs: List<Rand<A>>): Rand<List<A>> =
+    fs.foldRight(unit(List.empty())) { f, acc ->
+        map2(f, acc) { head, tail -> Cons(head, tail) }
+    }
+
+fun intsViaSequence(count: Int, rng: RNG): Pair<List<Int>, RNG> {
+    fun go(c: Int): List<Rand<Int>> =
+        if (c == 0) Nil
+        else Cons(::nonNegativeInt, go(c - 1))
+    return sequence(go(count))(rng)
+}

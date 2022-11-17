@@ -51,4 +51,15 @@ internal class Chapter6Exercises {
         val (d, _) = doubleR()(rng)
         assertTrue(d > 0.00751 && d < 0.00753)
     }
+
+    @Test
+    fun exercise6dot7() {
+        val r = sequence(List.of(unit(1), unit(2), unit(3)))
+        assertEquals(List.of(1, 2, 3), r(rng).first)
+
+        val size = 5
+        val (xs, _) = intsViaSequence(size, rng)
+        assertEquals(size, xs.length())
+        assertEquals(List.of(16159453, 1281479697, 340305902, 2015756020, 1770001318), xs)
+    }
 }
