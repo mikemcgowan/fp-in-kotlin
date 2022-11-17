@@ -1,5 +1,7 @@
 package chapter6
 
+import chapter3.List
+import chapter3.length
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -31,9 +33,16 @@ internal class Chapter6Exercises {
         assertEquals(1281479697, p2.second)
 
         val (t, _) = double3(rng)
-        println(t)
         assertTrue(t.first > 0.00751 && t.first < 0.00753)
         assertTrue(t.second > 0.59672 && t.second < 0.59674)
         assertTrue(t.third > 0.15845 && t.third < 0.15847)
+    }
+
+    @Test
+    fun exercise6dot4() {
+        val size = 5
+        val (xs, _) = ints(size, rng)
+        assertEquals(size, xs.length())
+        assertEquals(List.of(16159453, 1281479697, 340305902, 2015756020, 1770001318), xs)
     }
 }

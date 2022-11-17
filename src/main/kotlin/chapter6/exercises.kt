@@ -1,5 +1,8 @@
 package chapter6
 
+import chapter3.Cons
+import chapter3.List
+import chapter3.Nil
 import kotlin.math.abs
 
 interface RNG {
@@ -45,3 +48,12 @@ fun double3(rng: RNG): Pair<Triple<Double, Double, Double>, RNG> {
     val (d3, rng4) = double(rng3)
     return Triple(d1, d2, d3) to rng4
 }
+
+fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> =
+    if (count == 0)
+        Nil to rng
+    else {
+        val (i, rng2) = nonNegativeInt(rng)
+        val (xs, rng3) = ints(count - 1, rng2)
+        Cons(i, xs) to rng3
+    }
