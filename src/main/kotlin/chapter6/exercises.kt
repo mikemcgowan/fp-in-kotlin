@@ -90,3 +90,21 @@ fun intsViaSequence(count: Int, rng: RNG): Pair<List<Int>, RNG> {
         else Cons(::nonNegativeInt, go(c - 1))
     return sequence(go(count))(rng)
 }
+
+fun <A, B> mapx(s: Rand<A>, f: (A) -> B): Rand<B> =
+    { rng ->
+        val (a, rng2) = s(rng)
+        f(a) to rng2
+    }
+
+fun <A, B> flatMap(s: Rand<A>, f: (A) -> Rand<B>): Rand<B> =
+    { rng ->
+        val (a, rng2) = s(rng)
+        f(a)(rng2)
+    }
+
+fun nonNegativeLessThan(n: Int): Rand<Int> =
+    flatMap(::nonNegativeInt) {
+        val mod = it % n
+        if (it + (n - 1) - mod >= 0) unit(mod) else nonNegativeLessThan(n)
+    }

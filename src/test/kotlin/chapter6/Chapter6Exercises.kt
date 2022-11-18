@@ -62,4 +62,9 @@ internal class Chapter6Exercises {
         assertEquals(size, xs.length())
         assertEquals(List.of(16159453, 1281479697, 340305902, 2015756020, 1770001318), xs)
     }
+
+    @Test
+    fun exercise6dot8() {
+        assertEquals(3, nonNegativeLessThan(10)(rng).first)
+    }
 }
