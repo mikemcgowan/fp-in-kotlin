@@ -67,4 +67,16 @@ internal class Chapter6Exercises {
     fun exercise6dot8() {
         assertEquals(3, nonNegativeLessThan(10)(rng).first)
     }
+
+    @Test
+    fun exercise6dot9() {
+        val ra = nonNegativeLessThan(10)
+        val rb = nonNegativeLessThan(50)
+
+        val r1 = mapViaFlatMap(ra) { it * it }
+        assertEquals(9, r1(rng).first)
+
+        val r2 = map2ViaFlatMap(ra, rb) { a, b -> a * b }
+        assertEquals(141, r2(rng).first)
+    }
 }
