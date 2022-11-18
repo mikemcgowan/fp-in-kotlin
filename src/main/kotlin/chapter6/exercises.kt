@@ -108,3 +108,26 @@ fun <A, B> mapViaFlatMap(s: Rand<A>, f: (A) -> B): Rand<B> =
 
 fun <A, B, C> map2ViaFlatMap(ra: Rand<A>, rb: Rand<B>, f: (A, B) -> C): Rand<C> =
     flatMap(ra) { a -> flatMap(rb) { b -> unit(f(a, b)) } }
+
+data class State<S, out A>(val run: (S) -> Pair<A, S>) {
+    companion object {
+        fun <S, A> unit(a: A): State<S, A> = State { s -> a to s }
+
+        fun <S, A, B, C> map2(sa: State<S, A>, sb: State<S, B>, f: (A, B) -> C): State<S, C> =
+            sa.flatMap { a -> sb.map { b -> f(a, b) } }
+
+        fun <S, A> sequence(fs: List<State<S, A>>): State<S, List<A>> =
+            fs.foldRight(unit(List.empty())) { f, acc ->
+                map2(f, acc) { head, tail -> Cons(head, tail) }
+            }
+    }
+
+    fun <B> map(f: (A) -> B): State<S, B> =
+        flatMap { a -> unit(f(a)) }
+
+    fun <B> flatMap(f: (A) -> State<S, B>): State<S, B> =
+        State { s ->
+            val (a, sb) = run(s)
+            f(a).run(sb)
+        }
+}
