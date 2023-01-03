@@ -13,5 +13,7 @@ class Par<A>(val get: A) {
         fun <A> fork(p: () -> Par<A>): Par<A> = p()
 
         fun <A> run(p: Par<A>): A = p.get
+
+        fun <A, B> asyncF(f: (A) -> B): (A) -> Par<B> = { a -> lazyUnit { f(a) } }
     }
 }
