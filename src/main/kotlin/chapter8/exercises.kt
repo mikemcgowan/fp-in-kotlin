@@ -1,6 +1,7 @@
 package chapter8
 
-import arrow.core.Either
+import arrow.core.getOrElse
+import arrow.core.toOption
 import chapter3.List
 import chapter6.RNG
 import chapter6.State
@@ -8,12 +9,8 @@ import chapter6.double
 import kotlin.math.absoluteValue
 
 typealias SuccessCount = Int
+typealias TestCases = Int
 typealias FailedCase = String
-
-interface Prop {
-    fun check(): Either<Pair<FailedCase, SuccessCount>, SuccessCount>
-    fun and(p: Prop): Prop
-}
 
 data class Gen<A>(val sample: State<RNG, A>) {
     companion object {
@@ -52,4 +49,64 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
     fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> =
         Gen(sample.flatMap { a -> f(a).sample })
+}
+
+sealed class Result {
+    abstract fun isFalsified(): Boolean
+}
+
+object Passed : Result() {
+    override fun isFalsified(): Boolean = false
+}
+
+data class Falsified(val failure: FailedCase, val successes: SuccessCount) : Result() {
+    override fun isFalsified(): Boolean = true
+}
+
+data class Prop(val check: (TestCases, RNG) -> Result) {
+
+    fun and(p: Prop): Prop =
+        Prop { n, rng ->
+            when (val prop = check(n, rng)) {
+                is Passed -> p.check(n, rng)
+                is Falsified -> prop
+            }
+        }
+
+    fun or(p: Prop): Prop =
+        Prop { n, rng ->
+            when (val prop = check(n, rng)) {
+                is Passed -> prop
+                is Falsified -> p.check(n, rng)
+            }
+        }
+
+    companion object {
+        fun <A> forAll(ga: Gen<A>, f: (A) -> Boolean): Prop =
+            Prop { n: TestCases, rng: RNG ->
+                randomSequence(ga, rng).mapIndexed { i, a ->
+                    try {
+                        if (f(a)) Passed
+                        else Falsified(a.toString(), i)
+                    } catch (e: Exception) {
+                        Falsified(buildMessage(a, e), i)
+                    }
+                }.take(n).find { it.isFalsified() }.toOption().getOrElse { Passed }
+            }
+
+        private fun <A> randomSequence(ga: Gen<A>, rng: RNG): Sequence<A> =
+            sequence {
+                val (a: A, rng2: RNG) = ga.sample.run(rng)
+                yield(a)
+                yieldAll(randomSequence(ga, rng2))
+            }
+
+        private fun <A> buildMessage(a: A, e: Exception) =
+            """
+            |test case: $a
+            |generated an exception: ${e.message}
+            |stacktrace:
+            |${e.stackTrace.joinToString("\n")}
+            """.trimMargin()
+    }
 }
