@@ -47,6 +47,9 @@ data class Gen<A>(val sample: State<RNG, A>) {
         }
     }
 
+    fun listOf(): SGen<List<A>> =
+        SGen { listOfN(it, this) }
+
     fun <B> map(f: (A) -> B): Gen<B> =
         Gen(sample.map(f))
 
