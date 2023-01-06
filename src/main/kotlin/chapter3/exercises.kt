@@ -30,6 +30,9 @@ sealed class List<out A> {
     // required by chapter 8
     fun exists(f: (A) -> Boolean): Boolean =
         foldRight(false) { a, acc -> acc || f(a) }
+
+    fun toKotlinList(): kotlin.collections.List<A> =
+        foldLeft(kotlin.collections.listOf<A>()) { acc, a -> acc.plus(a) }
 }
 
 object Nil : List<Nothing>()
@@ -38,6 +41,12 @@ data class Cons<out A>(val head: A, val tail: List<A>) : List<A>()
 // required by chapter 8
 fun List<Int>.max(): Int? =
     foldRight(null) { n: Int, acc: Int? -> if (acc == null || n > acc) n else acc }
+
+// required by chapter 8
+fun List<Int>.sorted(): List<Int> {
+    val sortedKotlinList = toKotlinList().sorted()
+    return List.of(*sortedKotlinList.toTypedArray())
+}
 
 fun <A> List<A>.tail(): List<A> =
     when (this) {

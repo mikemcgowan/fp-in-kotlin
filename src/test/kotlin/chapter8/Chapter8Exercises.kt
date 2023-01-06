@@ -1,6 +1,9 @@
 package chapter8
 
+import chapter3.foldLeft
+import chapter3.length
 import chapter3.max
+import chapter3.sorted
 import chapter6.RNG
 import chapter6.SimpleRNG
 import chapter8.Prop.Companion.forAll
@@ -31,7 +34,13 @@ internal class Chapter8Exercises {
     fun exercise8dot14() {
         val smallInt = Gen.choose(-10, 10)
         val sortedProp = forAll(smallInt.nonEmptyListOf()) { ns ->
-            true // TODO
+            val sorted = ns.sorted()
+            val initial: Int? = null
+            if (sorted.length() < 1) true
+            else sorted.foldLeft(Pair(initial, true)) { acc, n ->
+                if (acc.second) Pair(n, acc.first == null || n >= acc.first!!)
+                else acc
+            }.second
         }
         run(sortedProp)
     }
