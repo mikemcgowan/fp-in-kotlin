@@ -7,9 +7,12 @@ import chapter6.RNG
 import chapter6.State
 import chapter6.double
 import kotlin.math.absoluteValue
+import kotlin.math.max
+import kotlin.math.min
 
 typealias SuccessCount = Int
 typealias TestCases = Int
+typealias MaxSize = Int
 typealias FailedCase = String
 
 data class Gen<A>(val sample: State<RNG, A>) {
@@ -47,6 +50,9 @@ data class Gen<A>(val sample: State<RNG, A>) {
         }
     }
 
+    fun nonEmptyListOf(): SGen<List<A>> =
+        SGen { listOfN(max(1, it), this) }
+
     fun listOf(): SGen<List<A>> =
         SGen { listOfN(it, this) }
 
@@ -83,27 +89,41 @@ data class Falsified(val failure: FailedCase, val successes: SuccessCount) : Res
     override fun isFalsified(): Boolean = true
 }
 
-data class Prop(val check: (TestCases, RNG) -> Result) {
+data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 
     fun and(p: Prop): Prop =
-        Prop { n, rng ->
-            when (val prop = check(n, rng)) {
-                is Passed -> p.check(n, rng)
+        Prop { max, n, rng ->
+            when (val prop = check(max, n, rng)) {
+                is Passed -> p.check(max, n, rng)
                 is Falsified -> prop
             }
         }
 
     fun or(p: Prop): Prop =
-        Prop { n, rng ->
-            when (val prop = check(n, rng)) {
+        Prop { max, n, rng ->
+            when (val prop = check(max, n, rng)) {
                 is Passed -> prop
-                is Falsified -> p.check(n, rng)
+                is Falsified -> p.check(max, n, rng)
             }
         }
 
     companion object {
+        fun <A> forAll(g: SGen<A>, f: (A) -> Boolean): Prop =
+            forAll({ g(it) }, f)
+
+        fun <A> forAll(g: (Int) -> Gen<A>, f: (A) -> Boolean): Prop =
+            Prop { max: MaxSize, n: TestCases, rng: RNG ->
+                val casesPerSize = (n + (max - 1)) / max
+                val props: Sequence<Prop> =
+                    generateSequence(0) { it + 1 }
+                        .take(min(n, max) + 1)
+                        .map { forAll(g(it), f) }
+                val prop: Prop = props.map { Prop { max, _, rng -> it.check(max, casesPerSize, rng) } }.reduce { p1, p2 -> p1.and(p2) }
+                prop.check(max, n, rng)
+            }
+
         fun <A> forAll(ga: Gen<A>, f: (A) -> Boolean): Prop =
-            Prop { n: TestCases, rng: RNG ->
+            Prop { _: MaxSize, n: TestCases, rng: RNG ->
                 randomSequence(ga, rng).mapIndexed { i, a ->
                     try {
                         if (f(a)) Passed
@@ -125,8 +145,6 @@ data class Prop(val check: (TestCases, RNG) -> Result) {
             """
             |test case: $a
             |generated an exception: ${e.message}
-            |stacktrace:
-            |${e.stackTrace.joinToString("\n")}
             """.trimMargin()
     }
 }

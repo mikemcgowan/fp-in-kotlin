@@ -26,10 +26,18 @@ sealed class List<out A> {
                 else -> Nil
             }
     }
+
+    // required by chapter 8
+    fun exists(f: (A) -> Boolean): Boolean =
+        foldRight(false) { a, acc -> acc || f(a) }
 }
 
 object Nil : List<Nothing>()
 data class Cons<out A>(val head: A, val tail: List<A>) : List<A>()
+
+// required by chapter 8
+fun List<Int>.max(): Int? =
+    foldRight(null) { n: Int, acc: Int? -> if (acc == null || n > acc) n else acc }
 
 fun <A> List<A>.tail(): List<A> =
     when (this) {

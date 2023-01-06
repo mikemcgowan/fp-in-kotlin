@@ -358,4 +358,22 @@ internal class Chapter3Exercises {
             Branch(Branch(Leaf(2), Leaf(3)), Branch(Leaf(4), Leaf(5))).mapF { "x".repeat(it) }
         )
     }
+
+    @Test
+    fun exists() {
+        val xs = List.of(1, 2, 3, 4)
+        assertTrue(xs.exists { it == 1 })
+        assertTrue(xs.exists { it == 4 })
+        assertTrue(xs.exists { it in 1..4 })
+        assertFalse(xs.exists { it == 0 })
+        assertFalse(xs.exists { it < 1 })
+        assertFalse(xs.exists { it > 4 })
+        assertFalse(xs.exists { it == 5 })
+    }
+
+    @Test
+    fun max() {
+        val xs = List.of(1, 2, 3, 4)
+        assertEquals(4, xs.max())
+    }
 }
