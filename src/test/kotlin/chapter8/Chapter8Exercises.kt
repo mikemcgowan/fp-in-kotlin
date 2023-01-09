@@ -15,7 +15,7 @@ internal class Chapter8Exercises {
     private fun run(p: Prop, maxSize: MaxSize = 100, testCases: TestCases = 100, rng: RNG = SimpleRNG(System.currentTimeMillis())) {
         val result = p.check(maxSize, testCases, rng)
         assertTrue(
-            result is Passed,
+            result is Passed || result is Proved,
             if (result is Falsified) "Falsified after ${result.successes} passed tests: ${result.failure}" else null
         )
     }

@@ -89,21 +89,25 @@ data class Falsified(val failure: FailedCase, val successes: SuccessCount) : Res
     override fun isFalsified(): Boolean = true
 }
 
+object Proved : Result() {
+    override fun isFalsified(): Boolean = false
+}
+
 data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 
     fun and(p: Prop): Prop =
         Prop { max, n, rng ->
             when (val prop = check(max, n, rng)) {
-                is Passed -> p.check(max, n, rng)
                 is Falsified -> prop
+                else -> p.check(max, n, rng)
             }
         }
 
     fun or(p: Prop): Prop =
         Prop { max, n, rng ->
             when (val prop = check(max, n, rng)) {
-                is Passed -> prop
                 is Falsified -> p.check(max, n, rng)
+                else -> prop
             }
         }
 
