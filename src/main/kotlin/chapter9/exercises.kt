@@ -7,6 +7,7 @@ interface Parser<A>
 interface Parsers<PE> {
     fun char(c: Char): Parser<Char>
     fun string(s: String): Parser<String>
+    fun regex(s: String): Parser<String>
     fun <A> run(p: Parser<A>, input: String): Either<PE, A>
     fun <A> listOfN(n: Int, p: Parser<A>): Parser<List<A>>
     fun <A> slice(p: Parser<A>): Parser<String>
@@ -16,6 +17,7 @@ interface Parsers<PE> {
     fun <A> Parser<A>.many(): Parser<List<A>>
     fun <A> Parser<A>.many1(): Parser<List<A>>
     fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B>
+    fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
     fun <A, B, C> map2(pa: Parser<A>, pb: Parser<B>, f: (A, B) -> C): Parser<C>
     infix fun <A, B> Parser<A>.product(p: Parser<B>): Parser<Pair<A, B>>
 }
@@ -38,4 +40,21 @@ abstract class Foo : Parsers<ParseError> {
             n > 0 -> map2(p, listOfN(n - 1, p)) { a, b -> listOf(a) + b }
             else -> succeed(emptyList())
         }
+
+    infix fun <A, B> Parser<A>.productViaFlatMap(p: Parser<B>): Parser<Pair<A, B>> =
+        flatMap { a -> p.flatMap { b -> succeed(a to b) } }
+
+    fun <A, B, C> map2ViaFlatMap(pa: Parser<A>, pb: Parser<B>, f: (A, B) -> C): Parser<C> =
+        pa.flatMap { a -> pb.map { b -> f(a, b) } }
+
+    fun <A, B> Parser<A>.mapViaFlatMap(f: (A) -> B): Parser<B> =
+        flatMap { a -> succeed(f(a)) }
+
+    init {
+        val parser: Parser<Int> =
+            regex("""\d+""").flatMap {
+                val n = it.toInt()
+                listOfN(n, char('a')).map { n }
+            }
+    }
 }
