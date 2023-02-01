@@ -9,6 +9,17 @@ interface Monoid<A> {
     val nil: A
 }
 
+fun <A> concatenate(xs: List<A>, m: Monoid<A>): A =
+    xs.fold(m.nil, m::combine)
+
+fun <A, B> foldMap(xs: List<A>, m: Monoid<B>, f: (A) -> B): B =
+    xs.fold(m.nil) { acc, a -> m.combine(acc, f(a)) }
+
+val stringMonoid = object : Monoid<String> {
+    override fun combine(a1: String, a2: String): String = a1 + a2
+    override val nil: String = ""
+}
+
 fun intAddition(): Monoid<Int> = object : Monoid<Int> {
     override fun combine(a1: Int, a2: Int): Int = a1 + a2
     override val nil: Int = 0
