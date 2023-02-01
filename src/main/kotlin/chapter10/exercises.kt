@@ -72,3 +72,25 @@ fun <A> endoMonoid(): Monoid<(A) -> A> = object : Monoid<(A) -> A> {
     override fun combine(a1: (A) -> A, a2: (A) -> A): (A) -> A = { a1(a2(it)) }
     override val nil: (A) -> A = { it }
 }
+
+sealed class WC
+
+data class Stub(val chars: String) : WC()
+data class Part(val l: String, val words: Int, val r: String) : WC()
+
+fun wcMonoid(): Monoid<WC> = object : Monoid<WC> {
+    override fun combine(a1: WC, a2: WC): WC =
+        when (a1) {
+            is Stub -> when (a2) {
+                is Stub -> Stub(a1.chars + a2.chars)
+                is Part -> Part(a1.chars + a2.l, a2.words, a2.r)
+            }
+
+            is Part -> when (a2) {
+                is Stub -> Part(a1.l, a1.words, a1.r + a2.chars)
+                is Part -> Part(a1.l, a1.words + a2.words + (if ((a1.r + a2.l).isEmpty()) 0 else 1), a2.r)
+            }
+        }
+
+    override val nil: WC = Stub("")
+}
