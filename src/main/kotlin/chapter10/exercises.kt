@@ -33,3 +33,8 @@ fun <A> optionMonoid(): Monoid<Option<A>> = object : Monoid<Option<A>> {
     override fun combine(a1: Option<A>, a2: Option<A>): Option<A> = a1.orElse { a2 }
     override val nil: Option<A> = None
 }
+
+fun <A> endoMonoid(): Monoid<(A) -> A> = object : Monoid<(A) -> A> {
+    override fun combine(a1: (A) -> A, a2: (A) -> A): (A) -> A = { a1(a2(it)) }
+    override val nil: (A) -> A = { it }
+}
