@@ -22,4 +22,14 @@ internal class Chapter10Exercises {
     fun foldMap() {
         assertEquals("Hello", foldMap(listOf('H', 'e', 'l', 'l', 'o'), stringMonoid) { it.toString() })
     }
+
+    @Test
+    fun foldRightViaFoldMap() {
+        assertEquals("HicEstIndex", foldRightViaFoldMap(words, "") { a, b -> a + b })
+    }
+
+    @Test
+    fun foldLeftViaFoldMap() {
+        assertEquals("HicEstIndex", foldLeftViaFoldMap(words, "") { a, b -> a + b })
+    }
 }

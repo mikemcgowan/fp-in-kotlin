@@ -9,11 +9,22 @@ interface Monoid<A> {
     val nil: A
 }
 
+fun <A> dual(m: Monoid<A>): Monoid<A> = object : Monoid<A> {
+    override fun combine(a1: A, a2: A): A = m.combine(a2, a1)
+    override val nil: A = m.nil
+}
+
 fun <A> concatenate(xs: List<A>, m: Monoid<A>): A =
     xs.fold(m.nil, m::combine)
 
 fun <A, B> foldMap(xs: List<A>, m: Monoid<B>, f: (A) -> B): B =
     xs.fold(m.nil) { acc, a -> m.combine(acc, f(a)) }
+
+fun <A, B> foldRightViaFoldMap(xs: List<A>, z: B, f: (A, B) -> B): B =
+    foldMap(xs, endoMonoid()) { a: A -> { b: B -> f(a, b) } }(z)
+
+fun <A, B> foldLeftViaFoldMap(xs: List<A>, z: B, f: (B, A) -> B): B =
+    foldMap(xs, dual(endoMonoid())) { a: A -> { b: B -> f(b, a) } }(z)
 
 val stringMonoid = object : Monoid<String> {
     override fun combine(a1: String, a2: String): String = a1 + a2
