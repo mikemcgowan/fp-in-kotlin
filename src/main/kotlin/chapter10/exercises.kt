@@ -3,6 +3,8 @@ package chapter10
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.orElse
+import chapter7.head
+import chapter7.splitAt
 
 interface Monoid<A> {
     fun combine(a1: A, a2: A): A
@@ -19,6 +21,16 @@ fun <A> concatenate(xs: List<A>, m: Monoid<A>): A =
 
 fun <A, B> foldMap(xs: List<A>, m: Monoid<B>, f: (A) -> B): B =
     xs.fold(m.nil) { acc, a -> m.combine(acc, f(a)) }
+
+fun <A, B> foldMapBalanced(xs: List<A>, m: Monoid<B>, f: (A) -> B): B =
+    when (val n = xs.size) {
+        0 -> m.nil
+        1 -> f(xs.head)
+        else -> {
+            val (l, r) = xs.splitAt(n / 2)
+            m.combine(foldMapBalanced(l, m, f), foldMapBalanced(r, m, f))
+        }
+    }
 
 fun <A, B> foldRightViaFoldMap(xs: List<A>, z: B, f: (A, B) -> B): B =
     foldMap(xs, endoMonoid()) { a: A -> { b: B -> f(a, b) } }(z)

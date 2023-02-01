@@ -24,6 +24,11 @@ internal class Chapter10Exercises {
     }
 
     @Test
+    fun foldMapBalanced() {
+        assertEquals("Hello", foldMapBalanced(listOf('H', 'e', 'l', 'l', 'o'), stringMonoid) { it.toString() })
+    }
+
+    @Test
     fun foldRightViaFoldMap() {
         assertEquals("HicEstIndex", foldRightViaFoldMap(words, "") { a, b -> a + b })
     }
