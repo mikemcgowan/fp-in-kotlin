@@ -63,4 +63,14 @@ internal class Chapter10Exercises {
         assertEquals(wc123a, wc123b)
         assertEquals(Part("", 9, ""), wc123a)
     }
+
+    @Test
+    fun wordCount() {
+        assertEquals(0, wordCount(""))
+        assertEquals(0, wordCount("   "))
+        assertEquals(1, wordCount("The"))
+        assertEquals(4, wordCount("The quick brown fox"))
+        assertEquals(9, wordCount("The quick brown fox jumps over the lazy dog"))
+        assertEquals(9, wordCount("   The   quick   brown   fox   jumps   over   the   lazy   dog   "))
+    }
 }

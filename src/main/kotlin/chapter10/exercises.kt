@@ -5,6 +5,7 @@ import arrow.core.Option
 import arrow.core.orElse
 import chapter7.head
 import chapter7.splitAt
+import kotlin.math.min
 
 interface Monoid<A> {
     fun combine(a1: A, a2: A): A
@@ -93,4 +94,14 @@ fun wcMonoid(): Monoid<WC> = object : Monoid<WC> {
         }
 
     override val nil: WC = Stub("")
+}
+
+fun wordCount(s: String): Int {
+    fun unstub(s: String): Int = min(s.length, 1)
+    val wcm = wcMonoid()
+    val wc = foldMap(s.toList(), wcm) { if (it.isWhitespace()) Part("", 0, "") else Stub("$it") }
+    return when (wc) {
+        is Stub -> unstub(wc.chars)
+        is Part -> unstub(wc.l) + wc.words + unstub(wc.r)
+    }
 }
