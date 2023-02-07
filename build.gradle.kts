@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.adarshr.test-logger") version "3.2.0"
-    id("com.github.ben-manes.versions") version "0.44.0"
+    id("com.github.ben-manes.versions") version "0.45.0"
     kotlin("jvm") version "1.8.0"
 }
 
@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.arrow-kt:arrow-core:1.1.3")
+    implementation("io.arrow-kt:arrow-core:1.1.5")
     testImplementation(kotlin("test"))
 }
 
